@@ -17,7 +17,7 @@ def get_least_busy_server():
             return None  # No available servers
 
 def health_check():
-    """Periodically checks if backend servers are online."""
+    """Periodically checks if backend servers are online and updates active servers list."""
     global active_servers
     while True:
         with lock:
@@ -38,6 +38,7 @@ def health_check():
                         print(f"❌ Server {server} is down!")
 
         time.sleep(5)  # Check servers every 5 seconds
+
 
 def handle_client(client_socket):
     """Handles client requests by forwarding to the least busy backend server."""
