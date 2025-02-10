@@ -1,170 +1,61 @@
 Load Balancer Project Documentation
 =====================================
 
-Project Overview
----------------
+I. Introduction
+--------------
 
-This project implements a Load Balancer in Python that distributes incoming client requests across multiple backend servers. The goal is to efficiently balance the load, ensure high availability, and optimize resource utilization using various load-balancing techniques.
+### Project Overview
 
-Features
---------
+This project implements a Load Balancer that efficiently distributes incoming client requests across multiple backend servers. The goal is to enhance system scalability, optimize resource utilization, and ensure high availability by routing traffic based on different load-balancing algorithms.
 
-### Round-Robin Load Balancing
+The Load Balancer is designed to:
 
-Distributes requests sequentially across backend servers.
+* Distribute client requests across multiple backend servers to prevent overload.
+* Ensure fault tolerance by detecting server failures and dynamically reassigning traffic.
+* Improve performance through optimized request handling and monitoring.
+* Provide real-time logging and analytics for better system observability.
 
-### Least Connections Algorithm
+### Motivation & Importance
 
-Directs requests to the server with the fewest active connections.
+Load balancing is a critical component in modern distributed systems, ensuring that no single server bears too much load, which can lead to performance degradation or system crashes. By implementing a load balancer, this project demonstrates key networking principles such as socket programming, concurrency, fault tolerance, and request distribution.
 
-### Fault Tolerance
+### Learning Outcomes
 
-Automatically detects server failures and reroutes traffic.
+By completing this project, we gained insights into:
 
-### Dynamic Scaling
+* ✅ **Networking & Sockets** – Understanding how client-server communication works.
+* ✅ **Load Balancing Algorithms** – Implementing Round-Robin and Least Connections.
+* ✅ **Fault Tolerance Mechanisms** – Detecting server failures and rerouting traffic dynamically.
+* ✅ **Multi-threading** – Handling multiple concurrent connections efficiently.
+* ✅ **Logging & Monitoring** – Recording system events, request flow, and response times.
 
-Allows adding or removing servers dynamically.
+II. Features of Application
+---------------------------
 
-### Multi-threading
+### 1️⃣ Multi-Server Load Balancing
 
-Handles multiple concurrent client requests.
+* ✅ **Round-Robin Algorithm** – Evenly distributes requests among all available servers.
+* ✅ **Least Connections Algorithm** – Prioritizes sending requests to the server with the lowest active connections.
 
-### Logging and Monitoring
+### 2️⃣ Fault Tolerance & Health Monitoring
 
-Tracks request distribution and server performance.
+* ✅ **Automated Server Health Checks** – The Load Balancer continuously monitors backend servers.
+* ✅ **Failure Detection & Recovery** – If a server goes down, traffic is automatically rerouted to active servers.
+* ✅ **Dynamic Server Restoration** – When a failed server is back online, it is seamlessly reintegrated.
 
-Technologies Used
-----------------
+### 3️⃣ Logging & Monitoring
 
-### Python 3
+* ✅ **Logs All Requests & Responses** – Every incoming client request is tracked and logged.
+* ✅ **Monitors Response Times** – Logs the time taken to process requests, aiding in performance analysis.
+* ✅ **Records Server Failures & Recoveries** – All system events are stored in `load_balancer.log`.
 
-### Sockets (TCP/IP) for Networking
+### 4️⃣ Scalability & Concurrency
 
-### Multi-threading for Concurrent Connections
+* ✅ **Multi-threading Support** – Can handle multiple client requests simultaneously.
+* ✅ **Dynamic Backend Server Management** – Backend servers can be added or removed without stopping the Load Balancer.
 
-### Logging for Monitoring and Debugging
+### 5️⃣ Error Handling & Security
 
-Project Setup
--------------
-
-### Prerequisites
-
-* Install Python 3:
-  ```sh
-  sudo apt install python3  # Ubuntu/Linux
-  brew install python3  # macOS
-  ```
-* Install Git (for version control):
-  ```sh
-  sudo apt install git
-  ```
-* Clone the repository:
-  ```sh
-  git clone git@github.com:kianis4/load-balancer.git
-  cd load-balancer
-  ```
-* Install required dependencies (if any):
-  ```sh
-  pip install -r requirements.txt
-  ```
-
-System Architecture
------------------
-
-The system consists of three main components:
-
-### Clients
-
-Send requests to the Load Balancer.
-
-### Load Balancer
-
-Directs client requests to an available backend server based on the chosen algorithm.
-
-### Backend Servers
-
-Process client requests and return responses.
-
-Implementation Steps
---------------------
-
-### Phase 1: Setup & Research
-
-* Research Load Balancers and socket programming.
-* Set up the development environment and create project files.
-
-### Phase 2: Backend Server Implementation
-
-* Implement a simple TCP server (server.py) that listens for client requests.
-* Run multiple backend server instances on different ports.
-
-### Phase 3: Load Balancer Implementation
-
-* Create a Load Balancer (load_balancer.py) that listens for client requests.
-* Implement Round-Robin Load Balancing.
-* Implement Least Connections Algorithm.
-
-### Phase 4: Enhancements & Fault Tolerance
-
-* Implement a health check mechanism to detect server failures.
-* Allow dynamic scaling (adding/removing backend servers).
-* Implement logging and monitoring.
-
-### Phase 5: Testing & Performance Optimization
-
-* Create a test client (client.py) to send requests.
-* Measure response times under different traffic loads.
-* Optimize request handling efficiency.
-
-### Phase 6: Documentation & Finalization
-
-* Write the project report.
-* Create presentation slides.
-* Record a demo video (optional).
-
-Running the Project
--------------------
-
-### Start Backend Servers
-
-```sh
-python3 server.py 9001 &
-python3 server.py 9002 &
-python3 server.py 9003 &
-```
-
-### Start Load Balancer
-
-```sh
-python3 load_balancer.py
-```
-
-### Run Client Requests
-
-```sh
-python3 client.py
-```
-
-Future Enhancements
--------------------
-
-### Weighted Load Balancing
-
-Distribute requests based on server capacity.
-
-### HTTPS Support
-
-Secure communication using TLS.
-
-### Web Interface
-
-Monitor request distribution visually.
-
-### Machine Learning Optimization
-
-Predict traffic patterns and allocate resources dynamically.
-
-Conclusion
-----------
-
-This project successfully implements a Load Balancer in Python to manage incoming client requests efficiently. By using multi-threading, fault tolerance, and dynamic scaling, the system ensures high availability and optimized resource utilization.
+* ✅ **Handles Connection Errors Gracefully** – Prevents crashes due to broken connections or failed servers.
+* ✅ **Prevents Overloading Servers** – Uses Least Connections to intelligently manage traffic.
+* ✅ **Rejects Requests When No Servers Are Available** – Sends 503 Service Unavailable response if all servers fail
