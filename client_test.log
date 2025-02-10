@@ -1,1 +1,1 @@
-Tested client.py and confirmed successful server responses
+Tested client-server communication with Load Balancer. Errors handled properly.
