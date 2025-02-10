@@ -1,0 +1,1 @@
+Tested Load Balancer with client.py. Requests are being distributed in Round-Robin order.
