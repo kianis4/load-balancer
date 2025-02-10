@@ -1,0 +1,1 @@
+Tested Load Balancer with Least Connections. Requests successfully routed to the least busy server.
