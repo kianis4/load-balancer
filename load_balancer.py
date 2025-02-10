@@ -20,6 +20,7 @@ def health_check():
     """Periodically checks if backend servers are online and updates active servers list."""
     global active_servers
     while True:
+        print("🔍 Running Health Check...")  # Debugging statement
         with lock:
             for server in SERVERS:
                 try:
@@ -38,6 +39,7 @@ def health_check():
                         print(f"❌ Server {server} is down!")
 
         time.sleep(5)  # Check servers every 5 seconds
+
 
 
 def handle_client(client_socket):
