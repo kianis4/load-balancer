@@ -11,9 +11,8 @@ logging.basicConfig(
 )
 
 # List of backend servers
-SERVERS = [("127.0.0.1", 9001), ("127.0.0.1", 9002), ("127.0.0.1", 9003)]
-server_connections = {server: 0 for server in SERVERS}  # Track active connections
-active_servers = SERVERS.copy()  # Maintain a list of active servers
+active_servers = []  # Dynamically discovered servers
+server_connections = {}  # Track connections for dynamically detected servers
 lock = threading.Lock()  # Ensure thread-safe updates
 
 
@@ -25,30 +24,49 @@ def get_least_busy_server():
         else:
             return None  # No available servers
 
+
 def health_check():
-    """Periodically checks if backend servers are online and updates active servers list."""
-    global active_servers
+    """Continuously scans for backend servers and updates the active server list."""
+    global active_servers, server_connections
     while True:
         logging.info("🔍 Running Health Check...")
         with lock:
-            for server in SERVERS:
+            discovered_servers = []
+            for port in range(9001, 9010):  # Scan ports 9001-9009 for active servers
+                server = ("127.0.0.1", port)
                 try:
                     test_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    test_socket.settimeout(1)  # Short timeout for quick check
+                    test_socket.settimeout(1)
                     test_socket.connect(server)
                     test_socket.close()
 
-                    if server not in active_servers:
-                        active_servers.append(server)  # Restore the server if it was down
-                        logging.info(f"✅ Server {server} is back online!")
+                    discovered_servers.append(server)
+                    if server not in server_connections:
+                        server_connections[server] = 0  # Initialize connection count
 
                 except (socket.timeout, ConnectionRefusedError):
-                    if server in active_servers:
-                        active_servers.remove(server)  # Remove the failed server
-                        logging.warning(f"❌ Server {server} is down!")
+                    pass  # Ignore inactive ports
 
-        logging.info(f"📡 Active servers: {active_servers}")
-        time.sleep(5)  # Check servers every 5 seconds
+            # Detect new servers
+            for server in discovered_servers:
+                if server not in active_servers:
+                    print(f"✅ Server {server} detected and added!")  # NEW: Print to terminal
+                    logging.info(f"✅ Server {server} detected and added!")
+
+            # Detect removed servers
+            for server in active_servers:
+                if server not in discovered_servers:
+                    print(f"❌ Server {server} removed from active servers!")  # NEW: Print to terminal
+                    logging.warning(f"❌ Server {server} removed from active servers!")
+
+            # Update active server list
+            active_servers = discovered_servers
+            print(f"📡 Active servers: {active_servers}")  # NEW: Print to terminal
+            logging.info(f"📡 Active servers: {active_servers}")
+
+        time.sleep(5)  # Run health check every 5 seconds
+
+
 
 
 def handle_client(client_socket):
