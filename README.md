@@ -104,6 +104,28 @@ pkill -f "server.py 9002"
 
 Then check logs to confirm it was detected.
 
+## Code Architecture
+
+Below is a breakdown of each Python file in this project, showing how it interacts with the others:
+
+### 1. server.py
+• start_server(port): Creates a TCP socket, binds to the specified port, listens for connections, and sends a welcome response.  
+• The server is designed to handle each request one at a time, creating short-lived connections with clients.  
+
+When multiple servers (on different ports) are running, the Load Balancer will route incoming requests to them based on the chosen strategy.
+
+### 2. load_balancer.py
+• start_load_balancer(port=8000): Main entry to start listening for incoming connections from clients. For each new connection, a separate thread is spawned to handle traffic (handle_client) without blocking others.  
+• handle_client(client_socket): Receives a request from the client, chooses the backend server (based on get_least_busy_server), forwards the request, and returns the server's response back to the client. Also performs logging and tracks how long each request takes.  
+• get_least_busy_server(): Chooses the server with the fewest active connections in a thread-safe way.  
+• health_check(): Runs in its own thread to periodically verify each backend server’s availability. If a server is down, it’s removed from the rotation; if it recovers, it’s added back in.
+
+### 3. client.py
+• send_request(): Opens a connection to the Load Balancer, sends a message, and prints out the server’s response.  
+• This file is mainly used for testing and demonstration, simulating multiple concurrent clients using threads.  
+
+Together, these components form a highly concurrent, fault-tolerant load balancing system. The client requests flow to the Load Balancer (load_balancer.py), which intelligently chooses an available server (server.py). Failing or recovering servers are managed by the health_check mechanism.
+
 Contribution
 ------------
 
